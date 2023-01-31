@@ -43,7 +43,7 @@ const hasPriority = (requestQuery) => {
 
 //API 1
 app.get("/todos/?", async (request, response) => {
-  let date = null;
+  let data = null;
   let getTodosQuery = "";
   const { search_q = "", status, priority } = request.query;
 
@@ -51,20 +51,20 @@ app.get("/todos/?", async (request, response) => {
     case hasStatusAndPriority(request.query):
       getTodosQuery = `
           SELECT * FROM todo WHERE
-          todo LIKE '${search_q}' AND
+          todo LIKE '%${search_q}%' AND
           status LIKE '${status}' AND
           priority LIKE '${priority}';`;
       break;
     case hasPriority(request.query):
       getTodosQuery = `
             SELECT * FROM todo WHERE
-            todo LIKE '${search_q}' AND
+            todo LIKE '%${search_q}%' AND
             priority LIKE '${priority}';`;
       break;
     case hasStatus(request.query):
       getTodosQuery = `
             SELECT * FROM todo WHERE
-            todo LIKE '${search_q}' AND
+            todo LIKE '%${search_q}%' AND
             status LIKE '${status}';`;
       break;
     default:
@@ -76,7 +76,7 @@ app.get("/todos/?", async (request, response) => {
         WHERE
             todo LIKE '%${search_q}%';`;
   }
-  data = await db.get(getTodosQuery);
+  data = await db.all(getTodosQuery);
   response.send(data);
 });
 
